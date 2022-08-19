@@ -7,104 +7,8 @@ document.addEventListener('DOMContentLoaded', function (event) {
   const CANVAS_WIDTH = canvas.clientWidth;
   const CANVAS_HEIGHT = canvas.clientHeight;
 
-  const game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT, ctx);
+  const game = new Game(CANVAS_WIDTH, CANVAS_HEIGHT, 3, 3, ctx);
   const Ui = new UI(game.pickCross);
-
-  function drawLine(type) {
-    const drawLineCords = {
-      dioganal1: {
-        move: {
-          x: 0,
-          y: 0,
-        },
-        pos: {
-          x: 400,
-          y: 400,
-        },
-      },
-      dioganal2: {
-        move: {
-          x: 400,
-          y: 0,
-        },
-        pos: {
-          x: 0,
-          y: 400,
-        },
-      },
-      col1: {
-        move: {
-          x: 66,
-          y: 0,
-        },
-        pos: {
-          x: 66,
-          y: 400,
-        },
-      },
-      col2: {
-        move: {
-          x: 199,
-          y: 0,
-        },
-        pos: {
-          x: 199,
-          y: 400,
-        },
-      },
-      col3: {
-        move: {
-          x: 331,
-          y: 0,
-        },
-        pos: {
-          x: 331,
-          y: 400,
-        },
-      },
-      row1: {
-        move: {
-          x: 400,
-          y: 66,
-        },
-        pos: {
-          x: 0,
-          y: 66,
-        },
-      },
-      row2: {
-        move: {
-          x: 400,
-          y: 199,
-        },
-        pos: {
-          x: 0,
-          y: 199,
-        },
-      },
-      row3: {
-        move: {
-          x: 400,
-          y: 331,
-        },
-        pos: {
-          x: 0,
-          y: 331,
-        },
-      },
-    };
-
-    ctx.beginPath();
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 5;
-
-    console.log(drawLineCords[type]);
-
-    ctx.moveTo(drawLineCords[type].move.x, drawLineCords[type].move.y);
-    ctx.lineTo(drawLineCords[type].pos.x, drawLineCords[type].pos.y);
-    ctx.stroke();
-    ctx.closePath();
-  }
 
   resetBtn.addEventListener('click', game.resetGame);
   canvas.addEventListener('click', (event) => {
@@ -131,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     const { win, type } = game.checkWinner();
 
     if (win) {
-      drawLine(type);
+      game.drawLine(type);
       Ui.showWinnerBanner(game.pickCross ? 'Победил Крестик' : 'Победил Нолик');
       console.log('win', { type });
     }
