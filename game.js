@@ -1,5 +1,5 @@
 class Game {
-  constructor(width, height, ctx) {
+  constructor(width, height, col, row, ctx) {
     this.width = width;
     this.height = height;
     this.ctx = ctx;
@@ -7,47 +7,142 @@ class Game {
     this.gameGrid = [];
     this.pickCross = true;
 
-    this.initGrid(3, 3);
-    this.renderGameField(3, 3);
+    this.col = col || 3;
+    this.row = row || 3;
+
+    this.initGrid();
+    this.renderGameField();
   }
+
+  drawLine = (type) => {
+    const drawLineCords = {
+      dioganal1: {
+        move: {
+          x: 0,
+          y: 0,
+        },
+        pos: {
+          x: this.width,
+          y: this.height,
+        },
+      },
+      dioganal2: {
+        move: {
+          x: this.width,
+          y: 0,
+        },
+        pos: {
+          x: 0,
+          y: this.height,
+        },
+      },
+      col1: {
+        move: {
+          x: 66,
+          y: 0,
+        },
+        pos: {
+          x: 66,
+          y: 400,
+        },
+      },
+      col2: {
+        move: {
+          x: 199,
+          y: 0,
+        },
+        pos: {
+          x: 199,
+          y: 400,
+        },
+      },
+      col3: {
+        move: {
+          x: 331,
+          y: 0,
+        },
+        pos: {
+          x: 331,
+          y: 400,
+        },
+      },
+      row1: {
+        move: {
+          x: 400,
+          y: 66,
+        },
+        pos: {
+          x: 0,
+          y: 66,
+        },
+      },
+      row2: {
+        move: {
+          x: 400,
+          y: 199,
+        },
+        pos: {
+          x: 0,
+          y: 199,
+        },
+      },
+      row3: {
+        move: {
+          x: 400,
+          y: 331,
+        },
+        pos: {
+          x: 0,
+          y: 331,
+        },
+      },
+    };
+
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = 'red';
+    this.ctx.moveTo(drawLineCords[type].move.x, drawLineCords[type].move.y);
+    this.ctx.lineTo(drawLineCords[type].pos.x, drawLineCords[type].pos.y);
+    this.ctx.stroke();
+    this.ctx.closePath();
+  };
 
   resetGame = () => {
     const banner = document.querySelector('.winner_banner');
-    let gameGrid = this.gameGrid;
-
     banner.classList.remove('show');
 
-    this.initGrid(3, 3);
-    this.renderGameField(gameGrid);
+    this.initGrid();
+    this.renderGameField();
   };
 
-  initGrid = (a, b) => {
+  initGrid = () => {
     let gameGrid = this.gameGrid;
 
-    for (let i = 0; i < a; i++) {
+    for (let i = 0; i < this.col; i++) {
       gameGrid[i] = [];
-      for (let j = 0; j < b; j++) {
+      for (let j = 0; j < this.row; j++) {
         gameGrid[i][j] = new Cell(
-          (i * this.width) / 3,
-          (j * this.height) / 3,
-          this.width / 3,
-          this.height / 3,
+          (i * this.width) / this.col,
+          (j * this.height) / this.row,
+          this.width / this.col,
+          this.height / this.row,
           null
         );
       }
     }
+
+    console.log({ gameGrid });
   };
 
   renderGameField = () => {
     let gameGrid = this.gameGrid;
-
-    this.ctx.clearRect(0, 0, this.width, this.height);
 
     for (let i = 0; i < gameGrid.length; i++) {
       for (let j = 0; j < gameGrid[i].length; j++) {
         gameGrid[i][j].show(this.ctx);
       }
     }
+
+    console.log({ gameGrid });
   };
 
   checkWinner = () => {
@@ -175,7 +270,7 @@ class Game {
     }
 
     const isFullGrid =
-      arr.filter((i) => i !== null).length === gameGrid.length * 3;
+      arr.filter((i) => i !== null).length === gameGrid.length * this.col;
 
     return isFullGrid;
   };
